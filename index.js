@@ -2,17 +2,47 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
+const departments = ["Sales", "Engineering", "Finance", "Legal"];
+const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"];
+const employees = ['John Doe', 'Mike Smith', 'Ashley Brown','Jane Doe', 'Kevin Kramer', 'Maria Johnson', 'Sarah Smith', 'Tom Allen'];
+const managers = ['None','John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith'];
+
 function init() {
     inquirer
-    .prompt([
+    .prompt(
         {
             type: 'list',
             message: 'What would you like to do?',
             name:'selection',
             choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department"],
         }
-    ]);
-    //direct to correct function depending on what they select
+    )
+    .then((answer) => {
+        switch(answer.selection) {
+            case "View All Employees":
+                viewAllEmployees();
+                break;
+            case "Add Employee":
+                addEmployee();
+                break;
+            case "Update Employee Role":
+                updateEmpRole();
+                break;
+            case "View All Roles":
+                viewAllRoles();
+                break;
+            case "Add Role":
+                addRole();
+                break;
+            case "View All Departments":
+                viewAllDpts();
+                break;
+            case "Add Department":
+                addDepartment();
+                break;
+        }
+    })
+    .catch((err) => console.error(err));
 }
 
 function addDepartment() {
@@ -23,8 +53,13 @@ function addDepartment() {
             message: 'What is the name of the department?',
             name: 'dptName'
         }
-    ]);
-    //console.log that dpt was added to database
+    ])
+    .then((answer) => {
+        departments.push(answer.dptName);
+        console.log(departments);
+        console.log(`${answer.dptName} department added to database`);
+    })
+    .catch((err) => console.error(err));
 }
 
 function addRole() {
@@ -32,23 +67,28 @@ function addRole() {
     .prompt([
         {
             type: 'input',
-            message: 'What is the name of the role',
+            message: 'What is the name of the role?',
             name: 'roleName'
         },
         {
             type: 'input',
-            message: 'What is the salary of the role',
+            message: 'What is the salary of the role?',
             name: 'salary'
         },
         {
             type: 'list',
             message: 'Which department does the role belong to?',
             name: 'roleDpt',
-            //need to find a way for new dpts to be added to this list
-            choices: ['Engineering', 'Finance', 'Legal', 'Sales']
+            choices: departments
         }
-    ]);
-    //console.log that role was added to database
+    ])
+    .then((answer) => {
+        //need to save the other data with the role name
+        roles.push(answer.roleName);
+        console.log(roles);
+        console.log(`${answer.roleName} role added to database`);
+    })
+    .catch((err) => console.error(err));
 }
 
 function addEmployee() {
@@ -68,18 +108,26 @@ function addEmployee() {
             type: 'list',
             message: "What is the employee's role?",
             name: 'empRole',
-            //need to find a way for new roles to be added to this list
-            choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"]
+            choices: roles
         },
         {
             type: 'list',
             message: "Who is the employee's manager?",
             name: 'empManager',
-            //need to find a way for new managers to be added to this list
-            choices: ['None', 'John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith']
+            choices: managers
         }
-    ]);
-    //console.log that role was added to database
+    ])
+    .then((answer) => {
+        //need to save the other data with the emp name
+        employees.push(answer.firstName);
+        if (answer.empRole === "Sales Lead" || answer.empRole === "Lead Engineer" || answer.empRole === "Account Manager" || answer.empRole === "Legal Team Lead") {
+            managers.push(answer.firstName);
+        }
+        console.log(employees);
+        console.log(managers);
+        console.log(`${answer.firstName} ${answer.lastName} added to database`);
+    })
+    .catch((err) => console.error(err));
 }
 
 function updateEmpRole() {
@@ -89,21 +137,38 @@ function updateEmpRole() {
             type: 'list',
             message: "Which employee's role do you want to update?",
             name: 'empUpdateName',
-            //for choices retrieve employee list
+            choices: employees
         },
         {
             type: 'list',
             message: 'Which role do you want to assign to the selected employee?',
             name: 'empNewRole',
-            //for choices retrieve list of roles
+            choices: roles
         }
-    ]);
-    //console.log that role was updated
+    ])
+    .then((answer) => {
+        //update the role
+        console.log(`${answer.empUpdateName}'s role updated to ${answer.empNewRole}`);
+    })
+    .catch((err) => console.error(err));
+}
+
+function viewAllDpts() {
+    //display both cols from dpt table
+}
+
+function viewAllRoles() {
+    //want id and title from role table
+    //want name from dpt table
+    //want salary from role table
 }
 
 function viewAllEmployees() {
     //want id, first name, and last name categories from employee table
     //want title from role table
+    //want name from dpt table
+    //want salary from role table
+    //want manager from employee table
 }
 
 init();
