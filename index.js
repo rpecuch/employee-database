@@ -1,7 +1,16 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: 'password',
+        database: 'business_db'
+    }
+);
 
+//can't just push to arrays need to update tables as well
 const departments = ["Sales", "Engineering", "Finance", "Legal"];
 const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"];
 const employees = ['John Doe', 'Mike Smith', 'Ashley Brown','Jane Doe', 'Kevin Kramer', 'Maria Johnson', 'Sarah Smith', 'Tom Allen'];
@@ -155,20 +164,38 @@ function updateEmpRole() {
 
 function viewAllDpts() {
     //display both cols from dpt table
+    db.query('SELECT * FROM department', function(err, results){
+        if(err) {
+            console.error(err);
+        }
+        else{
+            console.log(results);
+        }
+    });
 }
 
 function viewAllRoles() {
-    //want id and title from role table
-    //want name from dpt table
-    //want salary from role table
+    //see if you can hide the dpt id column
+    db.query('SELECT * FROM role JOIN department ON role.department_id = department.id', function(err, results){
+        if(err) {
+            console.error(err);
+        }
+        else{
+            console.log(results);
+        }
+    });
 }
 
 function viewAllEmployees() {
-    //want id, first name, and last name categories from employee table
-    //want title from role table
-    //want name from dpt table
-    //want salary from role table
-    //want manager from employee table
+    //see if you can get rid of role id and dpt id columns
+    db.query('SELECT * FROM employee JOIN (role, department) ON (role.id = employee.role_id AND department.id = role.department_id)', function(err, results){
+        if(err) {
+            console.error(err);
+        }
+        else{
+            console.log(results);
+        }
+    });
 }
 
 init();
