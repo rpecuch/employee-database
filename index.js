@@ -16,6 +16,8 @@ const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer"
 const employees = ['John Doe', 'Mike Smith', 'Ashley Brown','Jane Doe', 'Kevin Kramer', 'Maria Johnson', 'Sarah Smith', 'Tom Allen'];
 const managers = ['None','John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith'];
 
+//ids in tables are not correct
+
 function init() {
     inquirer
     .prompt(
@@ -163,37 +165,43 @@ function updateEmpRole() {
 }
 
 function viewAllDpts() {
-    //display both cols from dpt table
     db.query('SELECT * FROM department', function(err, results){
         if(err) {
             console.error(err);
         }
         else{
             console.log(results);
+            console.table(results);
         }
     });
 }
 
 function viewAllRoles() {
-    //see if you can hide the dpt id column
     db.query('SELECT * FROM role JOIN department ON role.department_id = department.id', function(err, results){
         if(err) {
             console.error(err);
         }
         else{
-            console.log(results);
+            results.forEach((result) => {
+                delete result.department_id
+            });
+            console.table(results);
         }
     });
 }
 
 function viewAllEmployees() {
-    //see if you can get rid of role id and dpt id columns
+    //figure out manager column
     db.query('SELECT * FROM employee JOIN (role, department) ON (role.id = employee.role_id AND department.id = role.department_id)', function(err, results){
         if(err) {
             console.error(err);
         }
         else{
-            console.log(results);
+            results.forEach((result) => {
+                delete result.department_id;
+                delete result.role_id;
+            });
+            console.table(results);
         }
     });
 }
