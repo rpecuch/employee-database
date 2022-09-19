@@ -67,7 +67,14 @@ function addDepartment() {
     ])
     .then((answer) => {
         departments.push(answer.dptName);
-        console.log(departments);
+        db.query('INSERT INTO department (department) VALUES (?)', answer.dptName, function(err, results){
+            if(err) {
+                console.log(err)
+            }
+            else{
+                console.log(results);
+            }
+        });
         console.log(`${answer.dptName} department added to database`);
     })
     .catch((err) => console.error(err));
@@ -94,14 +101,37 @@ function addRole() {
         }
     ])
     .then((answer) => {
-        //need to save the other data with the role name
+        let dptId;
+        //need this to incorporate new dpts
+        switch(answer.roleDpt) {
+            case "Sales":
+                dptId = 1;
+                break;
+            case "Engineering":
+                dptId = 2;
+                break;
+            case "Finance":
+                dptId = 3;
+                break;
+            case "Legal":
+                dptId = 4;
+                break;
+        }
+        db.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [answer.roleName, answer.salary, dptId], function(err, results){
+            if(err) {
+                console.log(err)
+            }
+            else{
+                console.log(results);
+            }
+        });
         roles.push(answer.roleName);
-        console.log(roles);
         console.log(`${answer.roleName} role added to database`);
     })
     .catch((err) => console.error(err));
 }
 
+//need to use manager data
 function addEmployee() {
     inquirer
     .prompt([
@@ -129,13 +159,45 @@ function addEmployee() {
         }
     ])
     .then((answer) => {
-        //need to save the other data with the emp name
+        let roleId;
+        switch(answer.empRole) {
+            case "Sales Lead":
+                roleId = 1;
+                break;
+            case "Salesperson":
+                roleId = 2;
+                break;
+            case "Lead Engineer":
+                roleId = 3;
+                break;
+            case "Software Engineer":
+                roleId = 4;
+                break;
+            case "Account Manager":
+                roleId = 5;
+                break;
+            case "Accountant":
+                roleId = 6;
+                break;
+            case "Legal Team Lead":
+                roleId = 7;
+                break;
+            case "Lawyer":
+                roleId = 8;
+                break;
+        }
+        db.query('INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)', [answer.firstName, answer.lastName, roleId], function(err, results){
+            if(err) {
+                console.log(err)
+            }
+            else{
+                console.log(results);
+            }
+        });
         employees.push(answer.firstName);
         if (answer.empRole === "Sales Lead" || answer.empRole === "Lead Engineer" || answer.empRole === "Account Manager" || answer.empRole === "Legal Team Lead") {
             managers.push(answer.firstName);
         }
-        console.log(employees);
-        console.log(managers);
         console.log(`${answer.firstName} ${answer.lastName} added to database`);
     })
     .catch((err) => console.error(err));
@@ -158,7 +220,15 @@ function updateEmpRole() {
         }
     ])
     .then((answer) => {
-        //update the role
+        //figure out values to put in the array
+        db.query('UPDATE employee SET role_id = ? WHERE ? = ?', [1, 2, 3], function(error, results) {
+            if(error) {
+                console.error(error);
+            }
+            else{
+                console.log(results);
+            }
+        });
         console.log(`${answer.empUpdateName}'s role updated to ${answer.empNewRole}`);
     })
     .catch((err) => console.error(err));
