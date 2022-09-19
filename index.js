@@ -10,13 +10,11 @@ const db = mysql.createConnection(
     }
 );
 
-//can't just push to arrays need to update tables as well
+//store initial choices
 const departments = ["Sales", "Engineering", "Finance", "Legal"];
 const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"];
 const employees = ['John Doe', 'Mike Smith', 'Ashley Brown','Jane Doe', 'Kevin Kramer', 'Maria Johnson', 'Sarah Smith', 'Tom Allen'];
 const managers = ['None','John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith'];
-
-//ids in tables are not correct
 
 function init() {
     inquirer
@@ -240,14 +238,15 @@ function viewAllDpts() {
             console.error(err);
         }
         else{
-            console.log(results);
             console.table(results);
+            init();
         }
     });
 }
 
+//need to fix role ids
 function viewAllRoles() {
-    db.query('SELECT * FROM role JOIN department ON role.department_id = department.id', function(err, results){
+    db.query('SELECT * FROM role JOIN department on department.id = role.department_id', function(err, results){
         if(err) {
             console.error(err);
         }
@@ -255,11 +254,14 @@ function viewAllRoles() {
             results.forEach((result) => {
                 delete result.department_id
             });
+            console.log(results);
             console.table(results);
+            init();
         }
     });
 }
 
+//need to fix employee ids
 function viewAllEmployees() {
     //figure out manager column
     db.query('SELECT * FROM employee JOIN (role, department) ON (role.id = employee.role_id AND department.id = role.department_id)', function(err, results){
@@ -272,6 +274,7 @@ function viewAllEmployees() {
                 delete result.role_id;
             });
             console.table(results);
+            init();
         }
     });
 }
