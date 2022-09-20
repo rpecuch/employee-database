@@ -73,11 +73,9 @@ function addDepartment() {
             if(err) {
                 console.log(err)
             }
-            else{
-                console.log(results);
-            }
         });
         console.log(`${answer.dptName} department added to database`);
+        init();
     })
     .catch((err) => console.error(err));
 }
@@ -104,6 +102,7 @@ function addRole() {
         }
     ])
     .then((answer) => {
+        //retrieve dpt ID from array of dpts
         var dptId = departments.indexOf(answer.roleDpt) + 1;
         db.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [answer.roleName, answer.salary, dptId], function(err, results){
             if(err) {
@@ -117,7 +116,6 @@ function addRole() {
     .catch((err) => console.error(err));
 }
 
-//!need to use manager data
 //retrieves input from user and adds new employee to database
 function addEmployee() {
     inquirer
@@ -146,8 +144,10 @@ function addEmployee() {
         }
     ])
     .then((answer) => {
+        //retrieve role ID from roles array
         var roleId = roles.indexOf(answer.empRole) + 1;
         let managerId;
+        //generates manager ID
         if(answer.empManager === 'None') {
             managerId = null;
         }
@@ -169,7 +169,6 @@ function addEmployee() {
     .catch((err) => console.error(err));
 }
 
-//!might need this to update manager id as well
 //retrieves input from user and updates employee role in database
 function updateEmpRole() {
     inquirer
@@ -188,7 +187,9 @@ function updateEmpRole() {
         }
     ])
     .then((answer) => {
+        //retrieves role ID from roles array
         var roleId = roles.indexOf(answer.empNewRole) + 1;
+        //retrieves employee ID from lastNames array
         var empId = lastNames.indexOf(answer.empUpdateName) + 1;
         db.query('UPDATE employee SET role_id = ? WHERE id = ?', [roleId, empId], function(error, results) {
             if(error) {
