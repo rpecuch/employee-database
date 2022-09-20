@@ -4,7 +4,7 @@
 
   ## Description
 
-The purpose of this project was to combine the principals of MySQL and Express to create an application that allows non-developers to easily view and interact with a database. This command-line application allows business owners to view and manage company departments, roles, and employees. 
+The purpose of this project was to combine the principals of MySQL and Node.js to create an application that allows non-developers to easily view and interact with a database. This command-line application allows business owners to view and manage company departments, roles, and employees. During the development process, I became comfortable utilizing MySQL syntax and incorporating it into a JavaScript application.
 
 What did you learn?
 
