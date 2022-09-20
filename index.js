@@ -135,6 +135,7 @@ function addRole() {
 }
 
 //!need to use manager data
+//! need to incorporate new roles
 //retrieves input from user and adds new employee to database
 function addEmployee() {
     inquirer
@@ -266,10 +267,9 @@ function viewAllRoles() {
     });
 }
 
-//!figure out manager column
 //displays table with all employees
 function viewAllEmployees() {
-    db.query('SELECT employee.id, employee.first_name, employee.last_name, employee.manager_id AS manager_id, role.title, role.salary, department.department FROM role LEFT JOIN (employee, department) ON role.id = employee.role_id AND role.department_id = department.id', function(err, results){
+    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department, role.salary, IFNULL(CONCAT(m.first_name, ' ', m.last_name), null) AS manager FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id LEFT JOIN employee AS m ON employee.manager_id = m.id", function(err, results){
         if(err) {
             console.error(err);
         }
