@@ -24,7 +24,7 @@ function init() {
             type: 'list',
             message: 'What would you like to do?',
             name:'selection',
-            choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department"],
+            choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"],
         }
     )
     .then((answer) => {
@@ -50,6 +50,8 @@ function init() {
             case "Add Department":
                 addDepartment();
                 break;
+            case "Quit":
+                process.exit();
         }
     })
     .catch((err) => console.error(err));
@@ -225,7 +227,7 @@ function updateEmpRole() {
     ])
     .then((answer) => {
         //figure out values to put in the array
-        db.query('UPDATE employee SET role_id = ? WHERE ? = ?', [1, 2, 3], function(error, results) {
+        db.query('UPDATE employee SET role_id = ? WHERE id = ?', [1, 3], function(error, results) {
             if(error) {
                 console.error(error);
             }

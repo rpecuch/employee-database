@@ -10,7 +10,7 @@
 -- FROM role
 -- LEFT JOIN (employee, department) ON role.id = employee.role_id AND role.department_id = department.id;
 
-SELECT employee.id, employee.first_name, employee.last_name, employee.manager_id
-AS manager_id, role.title, role.salary, department.department
+SELECT employee.id, employee.first_name, employee.last_name
+AS last_name, role.title, role.salary, department.department
 FROM role
 LEFT JOIN (employee, department) ON role.id = employee.role_id AND role.department_id = department.id;
