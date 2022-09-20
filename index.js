@@ -16,6 +16,7 @@ const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer"
 const employees = ['John Doe', 'Mike Smith', 'Ashley Brown','Jane Doe', 'Kevin Kramer', 'Maria Johnson', 'Sarah Smith', 'Tom Allen'];
 const managers = ['None','John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith'];
 
+//displays list of choices to user
 function init() {
     inquirer
     .prompt(
@@ -54,6 +55,7 @@ function init() {
     .catch((err) => console.error(err));
 }
 
+//retrieves input from user and adds new department to database
 function addDepartment() {
     inquirer
     .prompt([
@@ -78,6 +80,8 @@ function addDepartment() {
     .catch((err) => console.error(err));
 }
 
+//!need to incorporate new dpts in switch statement
+//retrieves input from user and adds new role to database
 function addRole() {
     inquirer
     .prompt([
@@ -100,7 +104,6 @@ function addRole() {
     ])
     .then((answer) => {
         let dptId;
-        //need this to incorporate new dpts
         switch(answer.roleDpt) {
             case "Sales":
                 dptId = 1;
@@ -129,7 +132,8 @@ function addRole() {
     .catch((err) => console.error(err));
 }
 
-//need to use manager data
+//!need to use manager data
+//retrieves input from user and adds new employee to database
 function addEmployee() {
     inquirer
     .prompt([
@@ -201,6 +205,8 @@ function addEmployee() {
     .catch((err) => console.error(err));
 }
 
+//!see to do below
+//retrieves input from user and updates employee role in database
 function updateEmpRole() {
     inquirer
     .prompt([
@@ -232,6 +238,7 @@ function updateEmpRole() {
     .catch((err) => console.error(err));
 }
 
+//displays table with all departments
 function viewAllDpts() {
     db.query('SELECT * FROM department', function(err, results){
         if(err) {
@@ -244,7 +251,8 @@ function viewAllDpts() {
     });
 }
 
-//need to fix role ids
+//!need to fix role ids
+//displays table with all roles
 function viewAllRoles() {
     db.query('SELECT * FROM role JOIN department on department.id = role.department_id', function(err, results){
         if(err) {
@@ -261,9 +269,10 @@ function viewAllRoles() {
     });
 }
 
-//need to fix employee ids
+//!need to fix employee ids
+//displays table with all employees
 function viewAllEmployees() {
-    //figure out manager column
+    //!figure out manager column
     db.query('SELECT * FROM employee JOIN (role, department) ON (role.id = employee.role_id AND department.id = role.department_id)', function(err, results){
         if(err) {
             console.error(err);
@@ -279,4 +288,5 @@ function viewAllEmployees() {
     });
 }
 
+//prompts user with options when app loads
 init();
