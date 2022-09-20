@@ -15,12 +15,12 @@ VALUES ("Sales Lead", 100000, 1),
 ("Lawyer", 190000, 4);
 
 -- entire manager_id column is populating as null
-INSERT INTO employee (first_name, last_name, role_id)
-VALUES ("John", "Doe", 1),
-("Mike", "Smith", 2),
-("Ashley", "Brown", 3),
-("Jane", "Doe", 4),
-("Kevin", "Kramer", 5),
-("Maria", "Johnson", 6),
-("Sarah", "Smith", 7),
-("Tom", "Allen", 8);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("John", "Doe", 1, NULL),
+("Mike", "Smith", 2, 1),
+("Ashley", "Brown", 3, NULL),
+("Jane", "Doe", 4, 3),
+("Kevin", "Kramer", 5, NULL),
+("Maria", "Johnson", 6, 5),
+("Sarah", "Smith", 7, NULL),
+("Tom", "Allen", 8, 7);

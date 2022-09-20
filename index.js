@@ -251,37 +251,27 @@ function viewAllDpts() {
     });
 }
 
-//!need to fix role ids
 //displays table with all roles
 function viewAllRoles() {
-    db.query('SELECT * FROM role JOIN department on department.id = role.department_id', function(err, results){
+    db.query('SELECT role.id, role.title, role.salary AS salary, department.department FROM department LEFT JOIN role ON department.id = role.department_id', function(err, results){
         if(err) {
             console.error(err);
         }
         else{
-            results.forEach((result) => {
-                delete result.department_id
-            });
-            console.log(results);
             console.table(results);
             init();
         }
     });
 }
 
-//!need to fix employee ids
+//!figure out manager column
 //displays table with all employees
 function viewAllEmployees() {
-    //!figure out manager column
-    db.query('SELECT * FROM employee JOIN (role, department) ON (role.id = employee.role_id AND department.id = role.department_id)', function(err, results){
+    db.query('SELECT employee.id, employee.first_name, employee.last_name, employee.manager_id AS manager_id, role.title, role.salary, department.department FROM role LEFT JOIN (employee, department) ON role.id = employee.role_id AND role.department_id = department.id', function(err, results){
         if(err) {
             console.error(err);
         }
         else{
-            results.forEach((result) => {
-                delete result.department_id;
-                delete result.role_id;
-            });
             console.table(results);
             init();
         }
