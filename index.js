@@ -13,7 +13,7 @@ const db = mysql.createConnection(
 //store initial choices
 const departments = ["Sales", "Engineering", "Finance", "Legal"];
 const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"];
-const employees = ['John Doe', 'Mike Smith', 'Ashley Brown','Jane Doe', 'Kevin Kramer', 'Maria Johnson', 'Sarah Smith', 'Tom Allen'];
+const lastNames = ['Doe', 'Smith', 'Brown','Widow', 'Kramer', 'Johnson', 'Pecuch', 'Allen'];
 const managers = ['None','John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith'];
 
 //displays list of choices to user
@@ -82,7 +82,6 @@ function addDepartment() {
     .catch((err) => console.error(err));
 }
 
-//!need to incorporate new dpts in switch statement
 //retrieves input from user and adds new role to database
 function addRole() {
     inquirer
@@ -105,37 +104,20 @@ function addRole() {
         }
     ])
     .then((answer) => {
-        let dptId;
-        switch(answer.roleDpt) {
-            case "Sales":
-                dptId = 1;
-                break;
-            case "Engineering":
-                dptId = 2;
-                break;
-            case "Finance":
-                dptId = 3;
-                break;
-            case "Legal":
-                dptId = 4;
-                break;
-        }
+        var dptId = departments.indexOf(answer.roleDpt) + 1;
         db.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [answer.roleName, answer.salary, dptId], function(err, results){
             if(err) {
                 console.log(err)
             }
-            else{
-                console.log(results);
-            }
         });
         roles.push(answer.roleName);
         console.log(`${answer.roleName} role added to database`);
+        init();
     })
     .catch((err) => console.error(err));
 }
 
 //!need to use manager data
-//! need to incorporate new roles
 //retrieves input from user and adds new employee to database
 function addEmployee() {
     inquirer
@@ -164,33 +146,7 @@ function addEmployee() {
         }
     ])
     .then((answer) => {
-        let roleId;
-        switch(answer.empRole) {
-            case "Sales Lead":
-                roleId = 1;
-                break;
-            case "Salesperson":
-                roleId = 2;
-                break;
-            case "Lead Engineer":
-                roleId = 3;
-                break;
-            case "Software Engineer":
-                roleId = 4;
-                break;
-            case "Account Manager":
-                roleId = 5;
-                break;
-            case "Accountant":
-                roleId = 6;
-                break;
-            case "Legal Team Lead":
-                roleId = 7;
-                break;
-            case "Lawyer":
-                roleId = 8;
-                break;
-        }
+        var roleId = roles.indexOf(answer.empRole) + 1;
         db.query('INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)', [answer.firstName, answer.lastName, roleId], function(err, results){
             if(err) {
                 console.log(err)
@@ -199,7 +155,7 @@ function addEmployee() {
                 console.log(results);
             }
         });
-        employees.push(answer.firstName);
+        lastNames.push(answer.lastName);
         if (answer.empRole === "Sales Lead" || answer.empRole === "Lead Engineer" || answer.empRole === "Account Manager" || answer.empRole === "Legal Team Lead") {
             managers.push(answer.firstName);
         }
@@ -208,16 +164,16 @@ function addEmployee() {
     .catch((err) => console.error(err));
 }
 
-//!see to do below
+//!might need this to update manager id as well
 //retrieves input from user and updates employee role in database
 function updateEmpRole() {
     inquirer
     .prompt([
         {
             type: 'list',
-            message: "Which employee's role do you want to update?",
+            message: "Which is the employee's last name?",
             name: 'empUpdateName',
-            choices: employees
+            choices: lastNames
         },
         {
             type: 'list',
@@ -227,16 +183,15 @@ function updateEmpRole() {
         }
     ])
     .then((answer) => {
-        //figure out values to put in the array
-        db.query('UPDATE employee SET role_id = ? WHERE id = ?', [1, 3], function(error, results) {
+        var roleId = roles.indexOf(answer.empNewRole) + 1;
+        var empId = lastNames.indexOf(answer.empUpdateName) + 1;
+        db.query('UPDATE employee SET role_id = ? WHERE id = ?', [roleId, empId], function(error, results) {
             if(error) {
                 console.error(error);
             }
-            else{
-                console.log(results);
-            }
         });
         console.log(`${answer.empUpdateName}'s role updated to ${answer.empNewRole}`);
+        init();
     })
     .catch((err) => console.error(err));
 }
