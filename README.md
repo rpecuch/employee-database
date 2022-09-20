@@ -52,7 +52,9 @@ Then, run the following command in the command line to install the console.table
   
 The user will be prompted with a list of options to choose from. Use the arrow keys to scroll through options and use the "Enter" key to select an option. Some options will display tables, and some have associated questions for the user to answer.
 
-insert demo video
+[Employee Database Demo.webm](https://user-images.githubusercontent.com/109092365/191353644-3ffec05a-c5e3-4913-9f43-5f3157f65150.webm)
+
+
 
   ## License
 
