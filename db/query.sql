@@ -10,3 +10,5 @@
 -- JOIN role ON employee.role_id = role.id
 -- JOIN department ON role.department_id = department.id
 -- LEFT JOIN employee AS m ON employee.manager_id = m.id;
+
+-- SELECT first_name, last_name FROM employee WHERE manager_id IS NULL;

@@ -12,9 +12,9 @@ const db = mysql.createConnection(
 
 //store initial choices
 const departments = ["Sales", "Engineering", "Finance", "Legal"];
-const roles = ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead", "Lawyer"];
-const lastNames = ['Doe', 'Smith', 'Brown','Widow', 'Kramer', 'Johnson', 'Pecuch', 'Allen'];
-const managers = ['None','John Doe', 'Ashley Brown', 'Kevin Kramer', 'Sarah Smith'];
+const roles = ["Sales Lead", "Lead Engineer", "Account Manager", "Legal Team Lead", "Salesperson", "Software Engineer", "Accountant", "Lawyer"];
+const lastNames = ['Doe', 'Brown', 'Kramer','Pecuch', 'Smith', 'Widow', 'Johnson', 'Allen'];
+const managers = ['None','Doe', 'Brown', 'Kramer', 'Pecuch'];
 
 //displays list of choices to user
 function init() {
@@ -147,19 +147,24 @@ function addEmployee() {
     ])
     .then((answer) => {
         var roleId = roles.indexOf(answer.empRole) + 1;
-        db.query('INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?)', [answer.firstName, answer.lastName, roleId], function(err, results){
+        let managerId;
+        if(answer.empManager === 'None') {
+            managerId = null;
+        }
+        else {
+            managerId = managers.indexOf(answer.empManager);
+        }
+        db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [answer.firstName, answer.lastName, roleId, managerId], function(err, results){
             if(err) {
                 console.log(err)
-            }
-            else{
-                console.log(results);
             }
         });
         lastNames.push(answer.lastName);
         if (answer.empRole === "Sales Lead" || answer.empRole === "Lead Engineer" || answer.empRole === "Account Manager" || answer.empRole === "Legal Team Lead") {
-            managers.push(answer.firstName);
+            managers.push(answer.lastName);
         }
         console.log(`${answer.firstName} ${answer.lastName} added to database`);
+        init();
     })
     .catch((err) => console.error(err));
 }
