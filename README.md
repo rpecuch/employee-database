@@ -2,6 +2,10 @@
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+  ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+  ![Node](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+  ![JavaScript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+
   ## Description
 
 The purpose of this project was to combine the principals of MySQL and Node.js to create an application that allows non-developers to easily view and interact with a database. This command-line application allows business owners to view and manage company departments, roles, and employees. During the development process, I became comfortable utilizing MySQL syntax and incorporating it into a JavaScript application.
