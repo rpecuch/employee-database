@@ -1,12 +1,12 @@
 DROP DATABASE IF EXISTS business_db;
 CREATE DATABASE business_db;
 USE business_db;
-
+-- dpts table
 CREATE TABLE department(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     department VARCHAR(30) NOT NULL
 );
-
+-- roles table, includes dpt
 CREATE TABLE role(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE role(
     REFERENCES department(id)
     ON DELETE SET NULL
 );
-
+-- employee table, includes role
 CREATE TABLE employee(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,

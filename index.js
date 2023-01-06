@@ -1,6 +1,8 @@
+//import reqired packages
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+// connection to MySQL database
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -19,6 +21,7 @@ const managers = ['None','Doe', 'Brown', 'Kramer', 'Pecuch'];
 //displays list of choices to user
 function init() {
     inquirer
+    //initial prompt to user
     .prompt(
         {
             type: 'list',
@@ -28,6 +31,7 @@ function init() {
         }
     )
     .then((answer) => {
+        //direct to correct fxn based on choice selected by user
         switch(answer.selection) {
             case "View All Employees":
                 viewAllEmployees();
@@ -68,13 +72,16 @@ function addDepartment() {
         }
     ])
     .then((answer) => {
+        //add to stored dpts
         departments.push(answer.dptName);
+        //add to database
         db.query('INSERT INTO department (department) VALUES (?)', answer.dptName, function(err, results){
             if(err) {
                 console.log(err)
             }
         });
         console.log(`${answer.dptName} department added to database`);
+        //ask user what they would like to do next
         init();
     })
     .catch((err) => console.error(err));
@@ -104,13 +111,16 @@ function addRole() {
     .then((answer) => {
         //retrieve dpt ID from array of dpts
         var dptId = departments.indexOf(answer.roleDpt) + 1;
+        //add role to database
         db.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [answer.roleName, answer.salary, dptId], function(err, results){
             if(err) {
                 console.log(err)
             }
         });
+        //add to roles array
         roles.push(answer.roleName);
         console.log(`${answer.roleName} role added to database`);
+        //ask user what they would like to do next
         init();
     })
     .catch((err) => console.error(err));
@@ -154,16 +164,20 @@ function addEmployee() {
         else {
             managerId = managers.indexOf(answer.empManager);
         }
+        //add to database
         db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [answer.firstName, answer.lastName, roleId, managerId], function(err, results){
             if(err) {
                 console.log(err)
             }
         });
+        // add to employees array
         lastNames.push(answer.lastName);
+        // add to managers array if applicable
         if (answer.empRole === "Sales Lead" || answer.empRole === "Lead Engineer" || answer.empRole === "Account Manager" || answer.empRole === "Legal Team Lead") {
             managers.push(answer.lastName);
         }
         console.log(`${answer.firstName} ${answer.lastName} added to database`);
+        //ask user what they would like to do next
         init();
     })
     .catch((err) => console.error(err));
@@ -191,12 +205,14 @@ function updateEmpRole() {
         var roleId = roles.indexOf(answer.empNewRole) + 1;
         //retrieves employee ID from lastNames array
         var empId = lastNames.indexOf(answer.empUpdateName) + 1;
+        //update in database
         db.query('UPDATE employee SET role_id = ? WHERE id = ?', [roleId, empId], function(error, results) {
             if(error) {
                 console.error(error);
             }
         });
         console.log(`${answer.empUpdateName}'s role updated to ${answer.empNewRole}`);
+        //ask user what they would like to do next
         init();
     })
     .catch((err) => console.error(err));
@@ -209,7 +225,9 @@ function viewAllDpts() {
             console.error(err);
         }
         else{
+            //display results in table
             console.table(results);
+            //ask user what they would like to do next
             init();
         }
     });
@@ -222,7 +240,9 @@ function viewAllRoles() {
             console.error(err);
         }
         else{
+            // display results in table
             console.table(results);
+            //ask user what they would like to do next
             init();
         }
     });
@@ -235,7 +255,9 @@ function viewAllEmployees() {
             console.error(err);
         }
         else{
+            // display results in table
             console.table(results);
+            //ask user what they would like to do next
             init();
         }
     });
